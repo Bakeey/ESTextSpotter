@@ -174,8 +174,8 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
         T.Normalize([0.485,0.456,0.406],[0.229,0.224,0.225])]
     )
     dir = os.listdir(image_dir)
-    for idx, i in enumerate(dir):
-        image = Image.open(os.path.join(image_dir, i)).convert('RGB')
+    for idx, filename in enumerate(dir):
+        image = Image.open(os.path.join(image_dir, filename)).convert('RGB')
         image, _ = transform(image,None)
         output = model(image[None].cuda())
         output = postprocessors['bbox'](output, torch.Tensor([[1.0, 1.0]]))[0]
@@ -208,10 +208,10 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
             'box_label': recs,
             'box_scores': scores,
             'image_id' : idx,
-            'image' : i,
+            'image' : filename,
             'beziers': output['beziers'][select_mask]
         }
-        with open(os.path.join(out_dir, i.replace('.png', '.pkl')), 'wb') as f:
+        with open(os.path.join(out_dir, filename.replace('.png', '.pkl')), 'wb') as f:
             pickle.dump(pred_dict, f)
         visualize(image, pred_dict, savedir=out_dir_vis)
 
