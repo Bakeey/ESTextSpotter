@@ -155,11 +155,11 @@ def addtgt(tgt):
 
     
 @click.command()
-@click.option('--model_config_path', type=str, default="3rdparty/ESTextSpotter/config/ESTS/ESTS_5scale_ctw1500_finetune.py", help='Path to the model config file')
-@click.option('--model_checkpoint_path', type=str, default="3rdparty/ESTextSpotter/model_zoo/totaltext_checkpoint.pth", help='Path to the model checkpoint')
-@click.option('--image_dir', type=str, default='data/hb/frames_subsampled/images', help='Path to the image directory')
-@click.option('--out_dir', type=str, default='data/hb/frames_subsampled/text_detections', help='Path to the output directory')
-@click.option('--out_dir_vis', type=str, default='output/text_detection/hb', help='Path to the output directory for visualization')
+@click.option('--model_config_path', type=str, default="./config/ESTS/ESTS_5scale_ctw1500_finetune.py", help='Path to the model config file')
+@click.option('--model_checkpoint_path', type=str, default="/cluster/home/kiten/totaltext_checkpoint.pth", help='Path to the model checkpoint')
+@click.option('--image_dir', type=str, default='/cluster/home/kiten/images/test', help='Path to the image directory')
+@click.option('--out_dir', type=str, default='/cluster/home/kiten/output/test/text_detections', help='Path to the output directory')
+@click.option('--out_dir_vis', type=str, default='/cluster/home/kiten/output/test/images', help='Path to the output directory for visualization')
 def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_vis):
 
     args = SLConfig.fromfile(model_config_path) 
