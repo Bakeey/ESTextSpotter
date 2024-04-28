@@ -73,7 +73,7 @@ def renorm(img: torch.FloatTensor, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224
         img_res = img_perm * std + mean
         return img_res.permute(0,3,1,2)
     
-def visualize(img, tgt, caption=None, dpi=300, savedir=None, show_in_console=True):
+def visualize(img, tgt, caption=None, dpi=300, savedir=None, show_in_console=False):
     """
     img: tensor(3, H, W)
     tgt: make sure they are all on cpu.
@@ -92,13 +92,21 @@ def visualize(img, tgt, caption=None, dpi=300, savedir=None, show_in_console=Tru
     #     plt.show()
 
     if savedir is not None:
+        image_filename = tgt['image']  # Extract the filename from the target dictionary
         if caption is None:
-            savename = '{}/{}-{}.png'.format(savedir, int(tgt['image_id']), str(datetime.datetime.now()).replace(' ', '-'))
+            basename = os.path.splitext(image_filename)[0]  # Strip the original extension
+            savename = f"{basename}-{datetime.datetime.now():%Y-%m-%d-%H-%M-%S}.png"
         else:
             savename = '{}/{}-{}-{}.png'.format(savedir, caption, int(tgt['image_id']), str(datetime.datetime.now()).replace(' ', '-'))
-        print("savename: {}".format(savename))
-        os.makedirs(os.path.dirname(savename), exist_ok=True)
-        plt.savefig(savename)
+        full_path = os.path.join(savedir, savename)
+        os.makedirs(savedir, exist_ok=True)  # Ensure the directory exists
+        plt.savefig(full_path)
+        print(f"Image saved as: {full_path}")
+    plt.close()
+
+    if show_in_console:
+        plt.show()
+
     plt.close()
 
 def addtgt(tgt):
