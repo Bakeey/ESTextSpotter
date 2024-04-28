@@ -6,6 +6,8 @@
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 
+cd /cluster/work/riner/users/PLR-2024/kiten/ESTextSpotter
+
 # Set Matplotlib backend to 'Agg' (non-interactive backend suitable for scripts that do not require a GUI)
 # Environment variable for Matplotlib
 export MPLBACKEND='Agg'
@@ -21,7 +23,7 @@ cd ./models/ests/ops
 python3 setup.py build develop --prefix=/cluster/home/kiten/.local
 
 # Step 10: Run vis script
-cd ../../..
+cd /cluster/work/riner/users/PLR-2024/kiten/ESTextSpotter
 python3 detect.py --model_config_path "./config/ESTS/ESTS_5scale_ctw1500_finetune.py" \
                  --model_checkpoint_path "/cluster/home/kiten/totaltext_checkpoint.pth" \
                  --image_dir "/cluster/home/kiten/images/test" \

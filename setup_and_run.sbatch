@@ -7,7 +7,7 @@
 #SBATCH --error=%x_%j.err
 
 # Step 2: Change to the correct directory
-/cluster/work/riner/users/PLR-2024/kiten/ESTextSpotter
+cd /cluster/work/riner/users/PLR-2024/kiten/ESTextSpotter
 
 # Step 3: Load necessary modules
 module load gcc/8.2.0 python/3.8.5 cuda/11.3.1
@@ -36,7 +36,7 @@ cd ./models/ests/ops
 python3 setup.py build develop --prefix=/cluster/home/kiten/.local
 
 # Step 10: Run vis script
-cd ../../..
+cd /cluster/work/riner/users/PLR-2024/kiten/ESTextSpotter
 python3 detect.py --model_config_path "./config/ESTS/ESTS_5scale_ctw1500_finetune.py" \
                  --model_checkpoint_path "/cluster/home/kiten/totaltext_checkpoint.pth" \
                  --image_dir "/cluster/home/kiten/images/test" \
