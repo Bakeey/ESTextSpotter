@@ -191,16 +191,24 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
             if i:
                 recs.append(r)
             recs_all.append(r)
+        scores = []
+        scores_all = []
+        for i,s in zip(select_mask,scores):
+            if i:
+                scores.append(s)
+            scores_all.append(s)
         # box_label = ['text' for item in rec[select_mask]]
         pred_dict = {
             'all_boxes': boxes,
             'all_beziers': output['beziers'],
             'all_recs': recs_all,
+            'all_scores': scores_all,
             'boxes': boxes[select_mask],
             'size': torch.tensor([image.shape[1],image.shape[2]]),
             'box_label': recs,
-            'image_id': idx,
-            'image' : i;
+            'box_scores': scores,
+            'image_id' : idx,
+            'image' : i,
             'beziers': output['beziers'][select_mask]
         }
         with open(os.path.join(out_dir, i.replace('.png', '.pkl')), 'wb') as f:
