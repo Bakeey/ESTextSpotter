@@ -8,7 +8,7 @@ from util import box_ops
 from PIL import Image
 import datasets.transforms as T
 import datetime
-import click
+import pickle
 
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
@@ -16,6 +16,7 @@ from matplotlib.patches import Polygon
 from pycocotools import mask as maskUtils
 from matplotlib import transforms
 import matplotlib.font_manager as mfm
+import click
 
 CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
 def _decode_recognition(rec):
@@ -158,7 +159,8 @@ def addtgt(tgt):
 @click.option('--model_checkpoint_path', type=str, default="3rdparty/ESTextSpotter/model_zoo/totaltext_checkpoint.pth", help='Path to the model checkpoint')
 @click.option('--image_dir', type=str, default='data/hb/frames_subsampled/images', help='Path to the image directory')
 @click.option('--out_dir', type=str, default='data/hb/frames_subsampled/text_detections', help='Path to the output directory')
-def main(model_config_path, model_checkpoint_path, image_dir, out_dir):
+@click.option('--out_dir_vis', type=str, default='output/text_detection/hb', help='Path to the output directory for visualization')
+def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_vis):
 
     args = SLConfig.fromfile(model_config_path) 
     model, criterion, postprocessors = build_model_main(args)
@@ -178,25 +180,32 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir):
         output = model(image[None].cuda())
         output = postprocessors['bbox'](output, torch.Tensor([[1.0, 1.0]]))[0]
         rec = [_decode_recognition(i) for i in output['rec']]
-        thershold = 0.4 # set a thershold
+        threshold = 0.4
         scores = output['scores']
         labels = output['labels']
         boxes = box_ops.box_xyxy_to_cxcywh(output['boxes'])
-        select_mask = scores > thershold
+        select_mask = scores > threshold
         recs = []
+        recs_all = []
         for i,r in zip(select_mask,rec):
             if i:
                 recs.append(r)
+            recs_all.append(r)
         # box_label = ['text' for item in rec[select_mask]]
         pred_dict = {
+            'all_boxes': boxes,
+            'all_beziers': output['beziers'],
+            'all_recs': recs_all,
             'boxes': boxes[select_mask],
             'size': torch.tensor([image.shape[1],image.shape[2]]),
             'box_label': recs,
             'image_id': idx,
+            'image' : i;
             'beziers': output['beziers'][select_mask]
         }
-        visualize(image, pred_dict, savedir=out_dir)
+        with open(os.path.join(out_dir, i.replace('.png', '.pkl')), 'wb') as f:
+            pickle.dump(pred_dict, f)
+        visualize(image, pred_dict, savedir=out_dir_vis)
 
 if __name__ == '__main__':
     main()
-    
