@@ -31,16 +31,6 @@ python3 detect.py --model_config_path "./config/ESTS/ESTS_5scale_ctw1500_finetun
                  --out_dir_vis "/cluster/home/kiten/output/test/images"
 python3 detect.py --model_config_path "./config/ESTS/ESTS_5scale_ctw1500_finetune.py" \
                  --model_checkpoint_path "/cluster/home/kiten/totaltext_checkpoint.pth" \
-                 --image_dir "/cluster/home/kiten/images/long" \
-                 --out_dir "/cluster/home/kiten/output/long/text_detections" \
-                 --out_dir_vis "/cluster/home/kiten/output/long/images"
-python3 detect.py --model_config_path "./config/ESTS/ESTS_5scale_ctw1500_finetune.py" \
-                 --model_checkpoint_path "/cluster/home/kiten/totaltext_checkpoint.pth" \
-                 --image_dir "/cluster/home/kiten/images/short" \
-                 --out_dir "/cluster/home/kiten/output/short/text_detections" \
-                 --out_dir_vis "/cluster/home/kiten/output/short/images"
-python3 detect.py --model_config_path "./config/ESTS/ESTS_5scale_ctw1500_finetune.py" \
-                 --model_checkpoint_path "/cluster/home/kiten/totaltext_checkpoint.pth" \
                  --image_dir "/cluster/home/kiten/images/pics" \
                  --out_dir "/cluster/home/kiten/output/pics/text_detections" \
                  --out_dir_vis "/cluster/home/kiten/output/pics/images"
