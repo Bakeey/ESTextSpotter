@@ -2,7 +2,7 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --gres=gpumem:20g
+#SBATCH --gres=gpumem:10g
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 
