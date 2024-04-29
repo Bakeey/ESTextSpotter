@@ -219,7 +219,15 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
             'image' : filename,
             'beziers': output['beziers'][select_mask]
         }
-        with open(os.path.join(out_dir, filename.replace('.png', '.pkl')), 'wb') as f:
+
+        # Move all tensors to CPU before serializing
+        for key, value in pred_dict.items():
+            if isinstance(value, torch.Tensor):
+                pred_dict[key] = value.cpu()
+        
+        # Replace the current extension with .pkl
+        base_name, _ = os.path.splitext(filename)
+        with open(os.path.join(out_dir, base_name + '.pkl'), 'wb') as f:
             pickle.dump(pred_dict, f)
         visualize(image, pred_dict, savedir=out_dir_vis)
 
