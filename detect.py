@@ -199,11 +199,12 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
             if i:
                 recs.append(r)
             recs_all.append(r)
-        scores = []
+        
+        rec_scores = []
         scores_all = []
         for i,s in zip(select_mask,scores):
             if i:
-                scores.append(s)
+                rec_scores.append(s)
             scores_all.append(s)
         # box_label = ['text' for item in rec[select_mask]]
         pred_dict = {
@@ -214,7 +215,7 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
             'boxes': boxes[select_mask],
             'size': torch.tensor([image.shape[1],image.shape[2]]),
             'box_label': recs,
-            'box_scores': scores,
+            'box_scores': rec_scores,
             'image_id' : idx,
             'image' : filename,
             'beziers': output['beziers'][select_mask]
