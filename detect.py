@@ -225,6 +225,12 @@ def main(model_config_path, model_checkpoint_path, image_dir, out_dir, out_dir_v
         for key, value in pred_dict.items():
             if isinstance(value, torch.Tensor):
                 pred_dict[key] = value.cpu()
+        for i,s in enumerate(pred_dict['all_scores']):
+            if isinstance(s, torch.Tensor):
+                pred_dict['all_scores'][i] = s.cpu()
+        for i,s in enumerate(pred_dict['box_scores']):
+            if isinstance(s, torch.Tensor):
+                pred_dict['box_scores'][i] = s.cpu()
         
         # Replace the current extension with .pkl
         base_name, _ = os.path.splitext(filename)
